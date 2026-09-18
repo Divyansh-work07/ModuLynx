@@ -1,47 +1,166 @@
-import { useState } from 'react';
-import { BootSequence } from '@/components/BootSequence';
-import { TopNav, type Page } from '@/components/TopNav';
-import { ExplorePage } from '@/pages/ExplorePage';
-import { CompatibilityPage } from '@/pages/CompatibilityPage';
-import { UpgradePage } from '@/pages/UpgradePage';
-import { LearnPage } from '@/pages/LearnPage';
-import { ScannerPage } from '@/pages/ScannerPage';
+import { useState } from "react";
 
-function App() {
-  const [booted, setBooted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<Page>('explore');
+import {
+  Box,
+  Cpu,
+  Database,
+  GraduationCap,
+  Search,
+  Settings,
+  ShieldCheck,
+  Wrench,
+} from "lucide-react";
+
+import ExplorePage from "./pages/ExplorePage";
+
+const navigation = [
+  {
+    name: "EXPLORE",
+    icon: Box,
+  },
+  {
+    name: "COMPATIBILITY",
+    icon: ShieldCheck,
+  },
+  {
+    name: "UPGRADE",
+    icon: Wrench,
+  },
+  {
+    name: "LEARN",
+    icon: GraduationCap,
+  },
+  {
+    name: "SCANNER",
+    icon: Cpu,
+  },
+];
+
+export default function App() {
+
+  const [active, setActive] =
+    useState("EXPLORE");
 
   return (
-    <div className="min-h-screen relative">
-      {!booted && <BootSequence onComplete={() => setBooted(true)} />}
 
-      <div className="relative z-10">
-        <TopNav currentPage={currentPage} onNavigate={setCurrentPage} />
+    <div className="app-shell">
 
-        <main className="max-w-[1600px] mx-auto px-4 lg:px-6 py-4 lg:py-6">
-          {currentPage === 'explore' && <ExplorePage onNavigate={setCurrentPage} />}
-          {currentPage === 'compatibility' && <CompatibilityPage />}
-          {currentPage === 'upgrade' && <UpgradePage />}
-          {currentPage === 'learn' && <LearnPage />}
-          {currentPage === 'scanner' && <ScannerPage />}
-        </main>
+      {/* TOP NAVIGATION */}
 
-        <footer className="max-w-[1600px] mx-auto px-4 lg:px-6 py-4 mt-4">
-          <div className="hud-panel p-4 flex flex-col md:flex-row items-center justify-between gap-2">
-            <div className="flex items-center gap-3">
-              <span className="font-display text-xs tracking-[0.15em] text-[#4a5a7a]">MODULYNX</span>
-              <span className="text-[#4a5a7a]">|</span>
-              <span className="text-xs text-[#4a5a7a]">Explore. Match. Upgrade.</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="badge badge-demo">DEMO BUILD</span>
-              <span className="text-xs text-[#4a5a7a] font-mono">v0.1.0</span>
-            </div>
+      <header className="topbar">
+
+        <div className="brand">
+
+          <div className="brand-mark">
+            M
           </div>
-        </footer>
-      </div>
+
+          <div>
+
+            <strong>
+              MODULYNX
+            </strong>
+
+            <span>
+              EXPLORE. MATCH. UPGRADE.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <nav>
+
+          {navigation.map(
+            (item) => {
+
+              const Icon =
+                item.icon;
+
+              return (
+
+                <button
+                  key={item.name}
+                  className={
+                    active === item.name
+                      ? "nav-item active"
+                      : "nav-item"
+                  }
+                  onClick={() =>
+                    setActive(
+                      item.name
+                    )
+                  }
+                >
+
+                  <Icon size={15} />
+
+                  {item.name}
+
+                </button>
+
+              );
+
+            }
+          )}
+
+        </nav>
+
+
+        <div className="system-tools">
+
+          <div className="system-online">
+
+            <span />
+
+            SYSTEM ONLINE
+
+          </div>
+
+
+          <button>
+            <Search size={17} />
+          </button>
+
+          <button>
+            <Database size={17} />
+          </button>
+
+          <button>
+            <Settings size={17} />
+          </button>
+
+        </div>
+
+      </header>
+
+
+      {/* MAIN */}
+
+      {active === "EXPLORE" ? (
+
+        <ExplorePage />
+
+      ) : (
+
+        <div className="coming-soon">
+
+          <Cpu size={45} />
+
+          <h2>
+            {active}
+          </h2>
+
+          <p>
+            This ModuLynx module is
+            under development.
+          </p>
+
+        </div>
+
+      )}
+
     </div>
   );
 }
-
-export default App;
